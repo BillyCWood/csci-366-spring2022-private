@@ -1,2 +1,23 @@
-;; TODO - implement counting up from 1 to 10
-;; in MIPS assembly, code only
+# TODO - implement counting up from 1 to 10
+# in MIPS assembly, code only
+.data
+
+.text
+	
+	main: 
+		addi $t0, $zero, 0	#i=0
+	while: 
+		bgt $t0,9,exit
+		
+		addi $t0, $t0, 1	#i++
+		
+		#print i
+		li $v0,1
+		move $a0, $t0
+		syscall 
+		
+		j while
+	exit:
+	
+	
+	
