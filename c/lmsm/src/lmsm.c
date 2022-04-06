@@ -33,12 +33,12 @@ void lmsm_i_push(lmsm *our_little_machine) {
 void lmsm_i_pop(lmsm *our_little_machine) {
     lmsm_stack *top = our_little_machine->accumulator;
 
-    if (top == NULL) {
+    if (top->next == NULL) {
         our_little_machine->status = STATUS_HALTED;
         our_little_machine->error_code = ERROR_EMPTY_STACK;
         return;
     } else {
-        our_little_machine->accumulator = our_little_machine->accumulator->next;
+        our_little_machine->accumulator = top->next;
     }
 
 
