@@ -1,0 +1,7 @@
+[ 23%] Built target lmsm_lib
+[ 47%] Built target lmsm
+[ 57%] Built target gtest
+[ 66%] Built target gtest_main
+[ 80%] Built target lmsm_tests
+[ 90%] Built target gmock
+[100%] Built target gmock_main
