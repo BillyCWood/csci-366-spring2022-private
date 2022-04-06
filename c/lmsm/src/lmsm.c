@@ -10,9 +10,15 @@
 //======================================================
 
 void lmsm_i_call(lmsm *our_little_machine) {
+
+    our_little_machine->call_stack->value = our_little_machine->program_counter;
+    our_little_machine->program_counter = our_little_machine->accumulator->value;
+    our_little_machine->accumulator = our_little_machine->accumulator->next;
 }
 
 void lmsm_i_return(lmsm *our_little_machine) {
+    our_little_machine->program_counter = our_little_machine->call_stack->value;
+    our_little_machine->call_stack->value = 0;
 }
 
 void lmsm_i_push(lmsm *our_little_machine) {
@@ -25,13 +31,16 @@ void lmsm_i_push(lmsm *our_little_machine) {
 }
 
 void lmsm_i_pop(lmsm *our_little_machine) {
-    if (our_little_machine->accumulator == NULL) {
+    lmsm_stack *top = our_little_machine->accumulator;
+
+    if (top == NULL) {
         our_little_machine->status = STATUS_HALTED;
         our_little_machine->error_code = ERROR_EMPTY_STACK;
         return;
     } else {
         our_little_machine->accumulator = our_little_machine->accumulator->next;
     }
+
 
 }
 
@@ -158,6 +167,9 @@ void lmsm_i_sdiv(lmsm *our_little_machine) {
 
 void lmsm_i_out(lmsm *our_little_machine) {
 
+    char string_value[100];
+    sprintf(string_value,"%d ", our_little_machine->accumulator->value);
+    strcat(our_little_machine->output_buffer,string_value);
 }
 
 void lmsm_i_inp(lmsm *our_little_machine) {
@@ -209,11 +221,12 @@ void lmsm_cap_accumulator_value(lmsm *our_little_machine){
 }
 
 void lmsm_step(lmsm *our_little_machine) {
-
-    int current_instruction = our_little_machine->memory[our_little_machine->program_counter];
-    our_little_machine->current_instruction = current_instruction;
-    our_little_machine->program_counter++;
-    lmsm_exec_instruction(our_little_machine,current_instruction);
+    if(!our_little_machine->status == STATUS_HALTED) {
+        int current_instruction = our_little_machine->memory[our_little_machine->program_counter];
+        our_little_machine->current_instruction = current_instruction;
+        our_little_machine->program_counter++;
+        lmsm_exec_instruction(our_little_machine, current_instruction);
+    }
 
 }
 
@@ -247,7 +260,11 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
     } else if (instruction == 901) {
         lmsm_i_inp(our_little_machine);
     } else if (instruction == 902) {
-        lmsm_i_out(our_little_machine);//need to do
+        lmsm_i_out(our_little_machine);
+    } else if (instruction == 910) {
+        lmsm_i_call(our_little_machine);
+    } else if (instruction == 911) {
+        lmsm_i_return(our_little_machine);
     } else if (instruction == 920) {
         lmsm_i_push(our_little_machine);
     } else if (instruction == 921) {
@@ -257,11 +274,11 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
     } else if (instruction == 923) {
         lmsm_i_sadd(our_little_machine);
     } else if (instruction == 924) {
-        lmsm_i_ssub(our_little_machine);//need to do
+        lmsm_i_ssub(our_little_machine);
     } else if (instruction == 925) {
-        lmsm_i_smax(our_little_machine);//need to do
+        lmsm_i_smax(our_little_machine);
     } else if (instruction == 926) {
-        lmsm_i_smin(our_little_machine);//need to do
+        lmsm_i_smin(our_little_machine);
     } else if (instruction == 927) {
         lmsm_i_smul(our_little_machine);
     } else if (instruction == 928) {
