@@ -55,6 +55,7 @@ TEST(parsing_tests, simple_instruction_parsing_works) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "OUT");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->instruction, "OUT");
     ASSERT_EQ(result->root->next, nullptr);
     asm_delete_compilation_result(result);
@@ -64,6 +65,7 @@ TEST(parsing_tests, two_instruction_parsing_works_w_space) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "INP OUT");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->instruction, "INP");
     ASSERT_STREQ(result->root->next->instruction, "OUT");
     asm_delete_compilation_result(result);
@@ -73,6 +75,7 @@ TEST(parsing_tests, two_instruction_parsing_works_w_newline) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "INP\nOUT");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->instruction, "INP");
     ASSERT_STREQ(result->root->next->instruction, "OUT");
     asm_delete_compilation_result(result);
@@ -82,6 +85,7 @@ TEST(parsing_tests, label_is_parsed_correctly) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "FOO OUT");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->label, "FOO");
     ASSERT_STREQ(result->root->instruction, "OUT");
     ASSERT_EQ(result->root->next, nullptr);
@@ -92,6 +96,7 @@ TEST(parsing_tests, numeric_reference_works_for_branch) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "BRA 22");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->instruction, "BRA");
     ASSERT_EQ(result->root->value, 22);
     ASSERT_EQ(result->root->next, nullptr);
@@ -102,6 +107,7 @@ TEST(parsing_tests, label_reference_works_for_branch) {
     compilation_result *result = asm_make_compilation_result();
     asm_parse_src(result, "BRA FOO");
     ASSERT_EQ(result->error, nullptr);
+    ASSERT_FALSE(result->root == nullptr);
     ASSERT_STREQ(result->root->instruction, "BRA");
     ASSERT_STREQ(result->root->label_reference, "FOO");
     ASSERT_EQ(result->root->next, nullptr);

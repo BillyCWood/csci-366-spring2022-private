@@ -39,7 +39,7 @@ const int ARG_INSTRUCTION_COUNT = 11;
 //======================================================
 
 instruction * asm_make_instruction(char* type, char *label, char *label_reference, int value, instruction * predecessor) {
-    instruction *new_instruction = malloc(sizeof(instruction));
+    instruction *new_instruction = calloc(1, sizeof(instruction));
     new_instruction->instruction = type;
     new_instruction->label = label;
     new_instruction->label_reference = label_reference;
