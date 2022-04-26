@@ -144,7 +144,77 @@ void asm_parse_src(compilation_result * result, char * original_src){
     //       ASM_ERROR_OUT_OF_RANGE        - when a number argument is out of range (-999 to 999)
     //
     //       store the error in result->error
+
+    char* token;
+    char* label = NULL;
+    char* label_reference = NULL;
+    char* get_instruction = NULL;
+    instruction * predecessor = NULL;
+    int value = 0;
+
+    char delimit[] = " \n";
+
+    token = strtok(src,delimit);
+
+
+    while(token != NULL) {
+
+        //parsing label
+        if(asm_is_instruction(token) == 0){
+            label = token;
+            token = strtok(NULL, delimit);
+        }
+        //parsing instruction
+        if(asm_is_instruction(token) == 1){
+            get_instruction = token;
+            token = strtok(NULL, delimit);
+        }
+        //parsing value
+        /*if(asm_is_num(token) == 0){
+            value = atoi(token);
+            //get range error
+            if (value < -999 || value > 999){
+                result->error = ASM_ERROR_OUT_OF_RANGE;
+                return;
+            }
+            token = strtok(NULL, delimit);
+        }*/
+        //parsing label reference
+        /*if(asm_is_instruction(token) == 1){
+            label_reference = token;
+            token = strtok(NULL, delimit);
+        }*/
+
+
+
+        if (result->root == NULL) {
+            if(get_instruction == NULL){result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;return;}
+            else if(strcmp(get_instruction,"BRA") == 0 && asm_instruction_requires_arg(label_reference) == 0){result->error = ASM_ERROR_ARG_REQUIRED;return;}
+            else{result->root = asm_make_instruction(get_instruction, label, label_reference, value, predecessor);}
+        }
+        //add next instruction to linked list
+        else {
+
+            instruction *node = result->root;
+            while (node->next != NULL) {
+                node = node->next;
+            }
+            if (node->next == NULL) {
+                if(get_instruction == NULL){result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;return;}
+                else if(strcmp(get_instruction,"BRA") == 0 && asm_instruction_requires_arg(label_reference) == 0){result->error = ASM_ERROR_ARG_REQUIRED;return;}
+                else{node->next = asm_make_instruction(get_instruction, label, label_reference, value, predecessor);}
+
+            }
+        }
+    }
+
 }
+
+
+
+
+
+
 
 //======================================================
 // Machine Code Generation
@@ -164,7 +234,27 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
     int value_for_instruction = instruction->value;
     if (strcmp("ADD", instruction->instruction) == 0) {
         result->code[instruction->offset] = 100 + value_for_instruction;
-    } else {
+    }else if (strcmp("SUB", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 200 + value_for_instruction;
+    } else if (strcmp("STA", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 300 + value_for_instruction;
+    }else if (strcmp("LDI", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 400 + value_for_instruction;
+    }else if (strcmp("LDA", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 500 + value_for_instruction;
+    }else if (strcmp("BRA", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 600 + value_for_instruction;
+    }else if (strcmp("BRZ", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 700 + value_for_instruction;
+    }else if (strcmp("BRP", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 800 + value_for_instruction;
+    }else if (strcmp("INP", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 901;
+    }else if (strcmp("OUT", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 902;
+    }else if (strcmp("HLT", instruction->instruction) == 0 || strcmp("COB", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 000;
+    }else {
         result->code[instruction->offset] = 0;
     }
 
