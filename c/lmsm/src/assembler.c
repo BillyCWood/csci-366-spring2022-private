@@ -52,6 +52,14 @@ instruction * asm_make_instruction(char* type, char *label, char *label_referenc
         new_instruction->offset = 0;
     }
 
+    if(strcmp(new_instruction->instruction, "SPUSHI")==0){
+        new_instruction->slots = 2;
+    }
+    else if(strcmp(new_instruction->instruction, "CALL")==0){
+        new_instruction->slots = 3;
+    }
+    else{new_instruction->slots = 1;}
+
     return new_instruction;
 }
 

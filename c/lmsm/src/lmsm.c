@@ -221,7 +221,8 @@ void lmsm_cap_accumulator_value(lmsm *our_little_machine){
 }
 
 void lmsm_step(lmsm *our_little_machine) {
-    if(!our_little_machine->status == STATUS_HALTED) {
+
+    while(our_little_machine->status == STATUS_RUNNING) {
         int current_instruction = our_little_machine->memory[our_little_machine->program_counter];
         our_little_machine->current_instruction = current_instruction;
         our_little_machine->program_counter++;
