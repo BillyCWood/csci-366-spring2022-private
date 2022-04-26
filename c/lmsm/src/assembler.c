@@ -252,6 +252,12 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         result->code[instruction->offset] = 901;
     }else if (strcmp("OUT", instruction->instruction) == 0) {
         result->code[instruction->offset] = 902;
+    }else if (strcmp("CALL", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 920;
+        result->code[++instruction->offset] = 401;
+        result->code[++instruction->offset] = 910;
+    }else if (strcmp("RET", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 911;
     }else if (strcmp("SPUSH", instruction->instruction) == 0) {
         result->code[instruction->offset] = 920;
     }else if (strcmp("SPOP", instruction->instruction) == 0) {
@@ -274,6 +280,9 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         result->code[instruction->offset] = 000;
     }else if (strcmp("DAT", instruction->instruction) == 0) {
         result->code[instruction->offset] = 000 + value_for_instruction;
+    }else if (strcmp("SPUSHI", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 920;
+        result->code[++instruction->offset] = 401;
     }else {
         result->code[instruction->offset] = 0;
     }
