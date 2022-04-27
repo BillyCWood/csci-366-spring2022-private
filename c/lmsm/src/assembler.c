@@ -199,16 +199,21 @@ void asm_parse_src(compilation_result * result, char * original_src){
         token = strtok(NULL,delimit);
     }
 
-    current_instruction = asm_make_instruction(get_instruction,label,label_reference,value,last_instruction);
-
-    if(current_instruction->instruction == NULL){
-        result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;
-        return;
+    if(get_instruction==NULL){
+       result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;
+       return;
     }
-    /*else if(asm_instruction_requires_arg(current_instruction->instruction)==1 && current_instruction->label_reference==NULL||current_instruction->value == 0){
+
+    //breaks simple instruction, parse label, and parse label reference
+    /*else if(asm_instruction_requires_arg(get_instruction)==0 && label_reference == NULL || value == 0){
         result->error = ASM_ERROR_ARG_REQUIRED;
         return;
     }*/
+
+    else{
+        current_instruction = asm_make_instruction(get_instruction, label, label_reference, value, last_instruction);
+    }
+
     if(result->root == NULL){
         result->root = current_instruction;
         last_instruction = current_instruction;
@@ -262,8 +267,8 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         else
         {
             int value = asm_find_label(instruction, instruction->label_reference);
-            if(value != -1){result->code[instruction->offset]= 500 + asm_find_label(instruction,instruction->label_reference);}
-            else{result->error = ASM_ERROR_BAD_LABEL; return;}
+            if(value == -1){result->error = ASM_ERROR_BAD_LABEL; return;}
+            else{result->code[instruction->offset]= 500 + asm_find_label(instruction,instruction->label_reference);}
         }
 
     }
