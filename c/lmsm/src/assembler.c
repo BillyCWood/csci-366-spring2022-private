@@ -117,6 +117,13 @@ int asm_is_num(char * token){
 
 int asm_find_label(instruction *root, char *label) {
     // TODO - scan the linked list for the given label, return -1 if not found
+    instruction *node = root->next;
+    while(node->next != NULL){
+        if(strcmp(node->label, label)==0){
+            return node->value;
+        }else {node = node->next;}
+
+    }
     return -1;
 }
 
@@ -164,11 +171,13 @@ void asm_parse_src(compilation_result * result, char * original_src){
             label = token;
             token = strtok(NULL, delimit);
         }
+
         //parsing instruction
         if(asm_is_instruction(token) == 1){
             get_instruction = token;
             token = strtok(NULL, delimit);
         }
+
         //parsing value
         /*if(asm_is_num(token) == 0){
             value = atoi(token);
@@ -179,6 +188,7 @@ void asm_parse_src(compilation_result * result, char * original_src){
             }
             token = strtok(NULL, delimit);
         }*/
+
         //parsing label reference
         /*if(asm_is_instruction(token) == 1){
             label_reference = token;
@@ -240,9 +250,24 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         result->code[instruction->offset] = 300 + value_for_instruction;
     }else if (strcmp("LDI", instruction->instruction) == 0) {
         result->code[instruction->offset] = 400 + value_for_instruction;
-    }else if (strcmp("LDA", instruction->instruction) == 0) {
-        result->code[instruction->offset] = 500 + value_for_instruction;
-    }else if (strcmp("BRA", instruction->instruction) == 0) {
+    }
+
+
+    else if (strcmp("LDA", instruction->instruction) == 0) {
+
+        if(value_for_instruction > 0){result->code[instruction->offset] = 500 + value_for_instruction;}
+
+        else
+        {
+            int value = asm_find_label(instruction, instruction->label_reference);
+            if(value != -1){result->code[instruction->offset]= 500 + asm_find_label(instruction,instruction->label_reference);}
+            else{result->error = ASM_ERROR_BAD_LABEL; return;}
+        }
+
+    }
+
+
+    else if (strcmp("BRA", instruction->instruction) == 0) {
         result->code[instruction->offset] = 600 + value_for_instruction;
     }else if (strcmp("BRZ", instruction->instruction) == 0) {
         result->code[instruction->offset] = 700 + value_for_instruction;
