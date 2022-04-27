@@ -268,7 +268,7 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         {
             int value = asm_find_label(instruction, instruction->label_reference);
             if(value == -1){result->error = ASM_ERROR_BAD_LABEL; return;}
-            else{result->code[instruction->offset]= 500 + asm_find_label(instruction,instruction->label_reference);}
+            else{result->code[instruction->offset]= 500 + value;}
         }
 
     }
