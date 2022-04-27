@@ -156,7 +156,6 @@ void asm_parse_src(compilation_result * result, char * original_src){
     char* label = NULL;
     char* label_reference = NULL;
     char* get_instruction = NULL;
-    instruction * predecessor = NULL;
     int value = 0;
 
     char delimit[] = " \n";
@@ -164,58 +163,61 @@ void asm_parse_src(compilation_result * result, char * original_src){
     token = strtok(src,delimit);
 
 
-    while(token != NULL) {
 
-        //parsing label
-        if(asm_is_instruction(token) == 0){
-            label = token;
-            token = strtok(NULL, delimit);
-        }
-
+    while(token!=NULL) {
         //parsing instruction
         if(asm_is_instruction(token) == 1){
-            get_instruction = token;
-            token = strtok(NULL, delimit);
-        }
-
-        //parsing value
-        /*if(asm_is_num(token) == 0){
-            value = atoi(token);
-            //get range error
-            if (value < -999 || value > 999){
-                result->error = ASM_ERROR_OUT_OF_RANGE;
+            if(get_instruction == NULL) {
+                get_instruction = token;
+            }else{
+                result->root=current_instruction = asm_make_instruction(get_instruction,label,label_reference,value,last_instruction);
+                last_instruction=current_instruction;
+                get_instruction = token;
+                result->root->next=current_instruction = asm_make_instruction(get_instruction,label,label_reference,value,last_instruction);
                 return;
             }
-            token = strtok(NULL, delimit);
-        }*/
-
-        //parsing label reference
-        /*if(asm_is_instruction(token) == 1){
-            label_reference = token;
-            token = strtok(NULL, delimit);
-        }*/
-
-
-
-        if (result->root == NULL) {
-            if(get_instruction == NULL){result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;return;}
-            else if(strcmp(get_instruction,"BRA") == 0 && asm_instruction_requires_arg(label_reference) == 0){result->error = ASM_ERROR_ARG_REQUIRED;return;}
-            else{result->root = asm_make_instruction(get_instruction, label, label_reference, value, predecessor);}
         }
-        //add next instruction to linked list
-        else {
 
-            instruction *node = result->root;
-            while (node->next != NULL) {
-                node = node->next;
+        else{
+            //parsing label
+            if(get_instruction == NULL){
+                label = token;
             }
-            if (node->next == NULL) {
-                if(get_instruction == NULL){result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;return;}
-                else if(strcmp(get_instruction,"BRA") == 0 && asm_instruction_requires_arg(label_reference) == 0){result->error = ASM_ERROR_ARG_REQUIRED;return;}
-                else{node->next = asm_make_instruction(get_instruction, label, label_reference, value, predecessor);}
+            else{
+                //parsing number
+                if(asm_is_num(token)==1){
+                    value = atoi(token);
+                    if(value < -999 || value > 999){
+                        result->error = ASM_ERROR_OUT_OF_RANGE;
+                        return;
+                    }
 
+                }
+                else{label_reference = token;}
             }
         }
+        token = strtok(NULL,delimit);
+    }
+
+    current_instruction = asm_make_instruction(get_instruction,label,label_reference,value,last_instruction);
+
+    if(current_instruction->instruction == NULL){
+        result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;
+        return;
+    }
+    /*else if(asm_instruction_requires_arg(current_instruction->instruction)==1 && current_instruction->label_reference==NULL||current_instruction->value == 0){
+        result->error = ASM_ERROR_ARG_REQUIRED;
+        return;
+    }*/
+    if(result->root == NULL){
+        result->root = current_instruction;
+        last_instruction = current_instruction;
+    }else{
+        instruction *node = result->root;
+        while(node->next != NULL){
+            node = node->next;
+        }
+        if(node->next == NULL){node->next = current_instruction;}
     }
 
 }
