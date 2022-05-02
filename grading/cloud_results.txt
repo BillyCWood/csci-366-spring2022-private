@@ -24,22 +24,22 @@
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
 [INFO] Running edu.montana.csci.csci366.strweb.ops.SorterTest
-[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.055 s <<< FAILURE! - in edu.montana.csci.csci366.strweb.ops.SorterTest
-[ERROR] testReverseSortingWorks  Time elapsed: 0.037 s  <<< FAILURE!
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 0.052 s <<< FAILURE! - in edu.montana.csci.csci366.strweb.ops.SorterTest
+[ERROR] testReverseSortingWorks  Time elapsed: 0.026 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 expected: <c
 b
 a> but was: <>
 	at edu.montana.csci.csci366.strweb.ops.SorterTest.testReverseSortingWorks(SorterTest.java:36)
 
-[ERROR] testParallelSortingWorks  Time elapsed: 0.001 s  <<< FAILURE!
+[ERROR] testParallelSortingWorks  Time elapsed: 0 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 expected: <a
 b
 c> but was: <>
 	at edu.montana.csci.csci366.strweb.ops.SorterTest.testParallelSortingWorks(SorterTest.java:24)
 
-[ERROR] testSortingWorks  Time elapsed: 0.002 s  <<< FAILURE!
+[ERROR] testSortingWorks  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 expected: <a
 b
@@ -48,7 +48,7 @@ c> but was: <>
 
 [INFO] Running edu.montana.csci.csci366.strweb.ops.LineLengthTransformerTest
 [ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.001 s <<< FAILURE! - in edu.montana.csci.csci366.strweb.ops.LineLengthTransformerTest
-[ERROR] testLineLengthWorks  Time elapsed: 0 s  <<< FAILURE!
+[ERROR] testLineLengthWorks  Time elapsed: 0.001 s  <<< FAILURE!
 org.opentest4j.AssertionFailedError: 
 expected: <1
 1
@@ -89,8 +89,8 @@ c> but was: <>
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD FAILURE
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  2.384 s
-[INFO] Finished at: 2022-05-01T17:22:24-06:00
+[INFO] Total time:  2.196 s
+[INFO] Finished at: 2022-05-02T08:36:00-06:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.1:test (default-test) on project csci-366-spring2022-cloud: There are test failures.
 [ERROR] 
