@@ -14,9 +14,41 @@ public class LineLengthTransformer {
     }
 
     public String toLengths() {
-        //TODO - this method should create a series of Runnables and use Threads to do all
-        //       line lengths in parallel
-      return "";
+
+        //CountDownLatch tells the program to wait for the pool of threads
+        //to complete before moving on
+        CountDownLatch latch = new CountDownLatch(_lines.length);
+
+        for(int i = 0; i < _lines.length; i++){
+            String line = _lines[i];
+           LineLengthCalculator lineLengthCalculator = new LineLengthCalculator(i,latch);
+           new Thread(lineLengthCalculator).start();//create a new thread and execute it
+        }
+        try {
+            latch.await(); //wait for all threads to complete
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return String.join("\n",_lines);
+    }
+
+    class LineLengthCalculator implements Runnable{
+
+        private final int index;
+        private final CountDownLatch latch;
+
+        public LineLengthCalculator(int index, CountDownLatch latch){
+            this.index = index;
+            this.latch = latch;
+        }
+
+        @Override
+        public void run(){
+            String currentValues = _lines[index];
+            _lines[index] = String.valueOf(currentValues.length());
+            latch.countDown(); //let all threads proceed
+        }
+
     }
 
 }

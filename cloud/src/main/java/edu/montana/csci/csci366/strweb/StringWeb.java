@@ -28,7 +28,7 @@ public class StringWeb {
     private void run() throws IOException {
         ServerSocket socket = new ServerSocket(_port);
         LOGGER.info("Listening on http://localhost:" + _port);
-        while (true) {
+        while (true) { //accept any new connection
             Socket connection = socket.accept();
             LOGGER.info("Handling connection");
             handleConnection(connection);
@@ -36,6 +36,10 @@ public class StringWeb {
     }
 
     private void handleConnection(Socket connection) throws IOException {
+        /*
+         * try(param) allocates the resources listed within the parentheses
+         * and will automatically close them when the try block is finished
+         */
         try (
                 connection;
                 InputStream inputStream = connection.getInputStream();
