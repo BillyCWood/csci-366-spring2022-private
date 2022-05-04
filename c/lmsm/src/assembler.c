@@ -117,7 +117,7 @@ int asm_is_num(char * token){
 
 int asm_find_label(instruction *root, char *label) {
     // TODO - scan the linked list for the given label, return -1 if not found
-    instruction *node = root->next;
+    instruction *node = root;
     while(node->next != NULL){
         if(strcmp(node->label, label)==0){
             return node->value;
@@ -267,7 +267,8 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
 
         else
         {
-            int value = asm_find_label(instruction, instruction->label_reference);
+            int value = asm_find_label(result->root, instruction->label_reference);
+            printf("value is %d\n",value);
             if(value == -1){result->error = ASM_ERROR_BAD_LABEL; return;}
             else{result->code[instruction->offset] = 500 + value;}
         }
