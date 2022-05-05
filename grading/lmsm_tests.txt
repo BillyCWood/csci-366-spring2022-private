@@ -59,7 +59,7 @@ Running main() from /home/carson/Projects/msu/csci-366-spring2022/grading/script
 [ RUN      ] code_generation.halt_instruction_generates_properly
 [       OK ] code_generation.halt_instruction_generates_properly (0 ms)
 [ RUN      ] code_generation.cob_instruction_generates_properly
-[       OK ] code_generation.cob_instruction_generates_properly (0 ms)
+[       OK ] code_generation.cob_instruction_generates_properly (1 ms)
 [ RUN      ] code_generation.dat_instruction_generates_properly
 [       OK ] code_generation.dat_instruction_generates_properly (0 ms)
 [ RUN      ] code_generation.spush_instruction_generates_properly
