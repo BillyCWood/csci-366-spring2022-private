@@ -15,8 +15,9 @@ public class LineLengthTransformer {
 
     public String toLengths() {
 
-        //CountDownLatch tells the program to wait for the pool of threads
-        //to complete before moving on
+        //CountDownLatch is a synchronization aid,
+        // it tells the program to wait for one or more threads
+        //to complete their mandatory operations before moving on
         CountDownLatch latch = new CountDownLatch(_lines.length);
 
         for(int i = 0; i < _lines.length; i++){
@@ -46,7 +47,7 @@ public class LineLengthTransformer {
         public void run(){
             String currentValues = _lines[index];
             _lines[index] = String.valueOf(currentValues.length());
-            latch.countDown(); //let all threads proceed
+            latch.countDown(); //decrement the count
         }
 
     }
