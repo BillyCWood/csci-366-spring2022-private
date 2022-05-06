@@ -34,13 +34,20 @@ public class CloudSha256Transformer {
             int index = _strings.indexOf("\n", _strings.length() / 2);//find next newline after midpoint
 
             String firstChunk = _strings.substring(0, index);
-            var client = HttpClient.newHttpClient();
+            var client = HttpClient.newHttpClient();//client sends requests and recieves responses
+
+            // Http request is built through the Http request builder
             var request = HttpRequest.newBuilder()
-                    .uri(URI.create(NODES.get(0)))
-                    .headers("Content-Type", "text/plain")
+                    .uri(URI.create(NODES.get(0)))//Unique Resource Identifier
+                                                  //parse the string "http://localhost:8001" to create a URI
+
+                    .headers("Content-Type", "text/plain")//Adds the given name value pairs to the set of headers for this request
+
+                    //sets request method to POST and the parameter is set as the request body publisher
                     .POST(HttpRequest.BodyPublishers.ofString("op=Line+Sha256&Strings=" + URLEncoder.encode(firstChunk, StandardCharsets.UTF_8.name())))
                     .build();
 
+            //send the request
             HttpResponse<String> firstResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             String secondChunk = _strings.substring(index);
