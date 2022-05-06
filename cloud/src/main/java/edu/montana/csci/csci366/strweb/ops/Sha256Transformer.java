@@ -63,7 +63,7 @@ public class Sha256Transformer {
                 digest = MessageDigest.getInstance("SHA-256");
 
 
-                //digest() updates our encodedhash byte array
+                //digest() updates and completes the hash computation
                 byte[] encodedhash = digest.digest(
                         originalString.getBytes(StandardCharsets.UTF_8));//encode String into byte array
                                                                          //using the specified UTF 8 char set
