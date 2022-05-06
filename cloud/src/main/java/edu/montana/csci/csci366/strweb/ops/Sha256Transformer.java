@@ -29,7 +29,7 @@ public class Sha256Transformer {
 
         for(int i = 0; i < _lines.length; i++){
             Sha256Computer sha256Computer = new Sha256Computer(i, latch);
-            executor.execute(sha256Computer);
+            executor.execute(sha256Computer);//execute the run() method
         }
         try {
             latch.await(); //wait for all threads to complete
@@ -51,14 +51,25 @@ public class Sha256Transformer {
 
         @Override
         public void run(){
+            // MessageDigest class gives the functionality of
+            // secure one-way hash function to produce a fixed-size
+            // hash value
             MessageDigest digest = null;
             try{
                 String originalString = _lines[index];
+
+                // return a SHA-256 hash value
+                // using the SHA-256 string algorithm
                 digest = MessageDigest.getInstance("SHA-256");
+
+
+                //digest() updates our encodedhash byte array
                 byte[] encodedhash = digest.digest(
-                        originalString.getBytes(StandardCharsets.UTF_8));
-                _lines[index] = bytesToHex(encodedhash);
-                latch.countDown();
+                        originalString.getBytes(StandardCharsets.UTF_8));//encode String into byte array
+                                                                         //using the specified UTF 8 char set
+
+                _lines[index] = bytesToHex(encodedhash);//convert bytes to hexadecimal
+                latch.countDown();//decrement the count
             }catch (NoSuchAlgorithmException e){
                 throw new RuntimeException(e);
             }
